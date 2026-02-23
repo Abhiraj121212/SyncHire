@@ -27,9 +27,9 @@ function HomePage() {
 
             <div className="flex flex-col">
               <span className="font-black text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
-                Talent IQ
+                SyncHire
               </span>
-              <span className="text-xs text-base-content/60 font-medium -mt-1">Code Together</span>
+              <span className="text-xs text-base-content/60 font-medium -mt-1">Think Together</span>
             </div>
           </Link>
 
@@ -62,8 +62,7 @@ function HomePage() {
             </h1>
 
             <p className="text-xl text-base-content/70 leading-relaxed max-w-xl">
-              The ultimate platform for collaborative coding interviews and pair programming.
-              Connect face-to-face, code in real-time, and ace your technical interviews.
+              No more back-and-forth. Interview, code, and evaluate — all in one real-time session.
             </p>
 
             {/* FEATURE PILLS */}
@@ -108,11 +107,11 @@ function HomePage() {
             {/* STATS */}
             <div className="stats stats-vertical lg:stats-horizontal bg-base-100 shadow-lg">
               <div className="stat">
-                <div className="stat-value text-primary">10K+</div>
+                <div className="stat-value text-primary">2K+</div>
                 <div className="stat-title">Active Users</div>
               </div>
               <div className="stat">
-                <div className="stat-value text-secondary">50K+</div>
+                <div className="stat-value text-secondary">5K+</div>
                 <div className="stat-title">Sessions</div>
               </div>
               <div className="stat">
@@ -135,10 +134,10 @@ function HomePage() {
       <div id="features" className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">
-            Everything You Need to <span className="text-primary font-mono">Succeed</span>
+            All You Need to <span className="text-primary font-mono">Succeed</span>
           </h2>
           <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
-            Powerful features designed to make your coding interviews seamless and productive
+           Everything you need to run seamless technical interviews — built for both interviewers and candidates
           </p>
         </div>
 
@@ -152,7 +151,7 @@ function HomePage() {
               </div>
               <h3 className="card-title">HD Video Call</h3>
               <p className="text-base-content/70">
-                Crystal clear video and audio for seamless communication during interviews
+                Talk through solutions, debug together, and evaluate thinking — all in one session
               </p>
             </div>
           </div>
@@ -165,7 +164,7 @@ function HomePage() {
               </div>
               <h3 className="card-title">Live Code Editor</h3>
               <p className="text-base-content/70">
-                Collaborate in real-time with syntax highlighting and multiple language support
+               Work through problems together just like you would in a real interview room
               </p>
             </div>
           </div>
@@ -178,7 +177,7 @@ function HomePage() {
               </div>
               <h3 className="card-title">Easy Collaboration</h3>
               <p className="text-base-content/70">
-                Share your screen, discuss solutions, and learn from each other in real-time
+               Discuss, collaborate, and assess — everything happens live in a single shared workspace
               </p>
             </div>
           </div>
