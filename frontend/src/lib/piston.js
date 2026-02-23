@@ -5,11 +5,12 @@ const PISTON_API = "https://emkc.org/api/v2/piston";
 const LANGUAGE_VERSIONS = {
   javascript: { language: "javascript", version: "18.15.0" },
   python: { language: "python", version: "3.10.0" },
-  java: { language: "java", version: "15.0.2" },
+  java: { language: "java", version: "21.0.1" },
+};
 
 /**
- * @param {string} language
- * @param {string} code
+ * @param {string} language 
+ * @param {string} code 
  * @returns {Promise<{success:boolean, output?:string, error?: string}>}
  */
 export async function executeCode(language, code) {
@@ -49,19 +50,10 @@ export async function executeCode(language, code) {
 
     const data = await response.json();
 
- 
-    if (data.compile && data.compile.code !== 0) {
-      return {
-        success: false,
-        error: data.compile.stderr || data.compile.output || "Compilation failed",
-      };
-    }
+    const output = data.run.output || "";
+    const stderr = data.run.stderr || "";
 
-    const output = data.run?.output || "";
-    const stderr = data.run?.stderr || "";
-
-
-    if (stderr && !output) {
+    if (stderr) {
       return {
         success: false,
         output: output,
@@ -72,8 +64,6 @@ export async function executeCode(language, code) {
     return {
       success: true,
       output: output || "No output",
-      
-      ...(stderr && { warning: stderr }),
     };
   } catch (error) {
     return {
@@ -91,4 +81,4 @@ function getFileExtension(language) {
   };
 
   return extensions[language] || "txt";
-}
+}     piston.js
