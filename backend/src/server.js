@@ -10,9 +10,8 @@ import sessionRoutes from "./routes/sessionRoute.js";
 
 const app = express();
 
-
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));  // ✅ Moved to top
 app.use(express.json());
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(clerkMiddleware());
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
@@ -33,4 +32,3 @@ const startServer = async () => {
 };
 
 startServer();
-
