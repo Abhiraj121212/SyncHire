@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useUser } from "@clerk/clerk-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
 
 import Navbar from "../components/Navbar";
@@ -20,6 +20,9 @@ function DashboardPage() {
 
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
+  useEffect(() => {
+  fetch(`${import.meta.env.VITE_API_URL}/health`).catch(() => {});
+}, []);
 
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty) return;
