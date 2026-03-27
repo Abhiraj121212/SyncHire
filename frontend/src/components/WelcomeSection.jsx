@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { ArrowRightIcon, SparklesIcon, ZapIcon } from "lucide-react";
 
-function WelcomeSection({ onCreateSession }) {
+function WelcomeSection({ onCreateSession, backendReady }) {
   const { user } = useUser();
 
   return (
@@ -23,11 +23,12 @@ function WelcomeSection({ onCreateSession }) {
           </div>
           <button
             onClick={onCreateSession}
-            className="group px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
+            disabled={!backendReady}
+            className="group px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div className="flex items-center gap-3 text-white font-bold text-lg">
               <ZapIcon className="w-6 h-6" />
-              <span>Create Session</span>
+              <span>{backendReady ? "Create Session" : "Connecting..."}</span>
               <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </div>
           </button>
