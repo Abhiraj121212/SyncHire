@@ -1,5 +1,6 @@
 import { requireAuth } from "@clerk/express";
 import User from "../models/User.js";
+import { clerkClient } from "@clerk/express";
 
 export const protectRoute = [
   requireAuth(),
@@ -9,13 +10,21 @@ export const protectRoute = [
 
       if (!clerkId) return res.status(401).json({ message: "Unauthorized - invalid token" });
 
-      const user = await User.findOne({ clerkId });
+      let user = await User.findOne({ clerkId });
 
-      if (!user) return res.status(404).json({ message: "User not found" });
+      if (!user) {
+        // fetch user details from Clerk and create in MongoDB
+        const clerkUser = await clerkClient.users.getUser(clerkId);
 
+        user = await User.create({
+          clerkId,
+          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || "Anonymous",
+          email: clerkUser.emailAddresses[0]?.emailAddress || "",
+          profileImage: clerkUser.imageUrl || "",
+        });
+      }
 
       req.user = user;
-
       next();
     } catch (error) {
       console.error("Error in protectRoute middleware", error);
