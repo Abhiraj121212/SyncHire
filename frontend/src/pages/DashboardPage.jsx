@@ -15,27 +15,14 @@ function DashboardPage() {
   const { user } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
-  const [backendReady, setBackendReady] = useState(false);
 
   const createSessionMutation = useCreateSession();
 
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
-
   useEffect(() => {
-    const wakeBackend = async () => {
-      let attempts = 0;
-      while (attempts < 10) {
-        try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/health`);
-          if (res.ok) { setBackendReady(true); return; }
-        } catch (_) {}
-        await new Promise(r => setTimeout(r, 4000));
-        attempts++;
-      }
-    };
-    wakeBackend();
-  }, []);
+  fetch(`${import.meta.env.VITE_API_URL}/health`).catch(() => {});
+}, []);
 
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty) return;
@@ -59,6 +46,7 @@ function DashboardPage() {
 
   const isUserInSession = (session) => {
     if (!user.id) return false;
+
     return session.host?.clerkId === user.id || session.participant?.clerkId === user.id;
   };
 
@@ -66,11 +54,9 @@ function DashboardPage() {
     <>
       <div className="min-h-screen bg-base-300">
         <Navbar />
-        <WelcomeSection 
-          onCreateSession={() => setShowCreateModal(true)} 
-          backendReady={backendReady}
-        />
+        <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
 
+        {/* Grid layout */}
         <div className="container mx-auto px-6 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <StatsCards
@@ -100,4 +86,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default DashboardPage;  
