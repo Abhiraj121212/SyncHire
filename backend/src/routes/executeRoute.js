@@ -26,7 +26,6 @@ router.post("/", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.PISTON_API_KEY}`,
       },
       body: JSON.stringify({
         language: languageConfig.language,
