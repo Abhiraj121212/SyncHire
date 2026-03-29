@@ -3,9 +3,9 @@ import express from "express";
 const router = express.Router();
 
 const LANGUAGE_VERSIONS = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
-  java: { language: "java", version: "21.0.1" },
+  javascript: { language: "javascript", version: "*" },
+  python: { language: "python", version: "*" },
+  java: { language: "java", version: "*" },
 };
 
 const getFileExtension = (language) => {
@@ -24,9 +24,7 @@ router.post("/", async (req, res) => {
 
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         language: languageConfig.language,
         version: languageConfig.version,
@@ -35,7 +33,7 @@ router.post("/", async (req, res) => {
     });
 
     const data = await response.json();
-    const output = data.run?.output || "";
+    const output = data.run?.stdout || data.run?.output || "";
     const stderr = data.run?.stderr || "";
 
     if (stderr) return res.json({ success: false, output, error: stderr });
