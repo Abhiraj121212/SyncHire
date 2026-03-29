@@ -33,6 +33,7 @@ router.post("/", async (req, res) => {
     });
 
     const data = await response.json();
+    console.log("Piston raw response:", JSON.stringify(data));
     const output = data.run?.stdout || data.run?.output || "";
     const stderr = data.run?.stderr || "";
 
