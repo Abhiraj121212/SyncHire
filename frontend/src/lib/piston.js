@@ -3,7 +3,6 @@ export async function executeCode(language, code) {
     return runInBrowser(code);
   }
 
-  // fallback for python/java — calls backend (which can use glot.io later)
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/execute`, {
       method: "POST",
@@ -19,24 +18,42 @@ export async function executeCode(language, code) {
 function runInBrowser(code) {
   return new Promise((resolve) => {
     const logs = [];
+
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
-    iframe.sandbox = "allow-scripts";
     document.body.appendChild(iframe);
 
-    iframe.contentWindow.console = {
-      log: (...args) => logs.push(args.map((a) => JSON.stringify(a)).join(" ")),
-      error: (...args) => logs.push("[error] " + args.map(String).join(" ")),
-      warn: (...args) => logs.push("[warn] " + args.map(String).join(" ")),
+    const wrappedCode = `
+      const _logs = [];
+      const _console = {
+        log: (...args) => _logs.push(args.map(a => {
+          try { return JSON.stringify(a); } catch { return String(a); }
+        }).join(" ")),
+        error: (...args) => _logs.push("[error] " + args.map(String).join(" ")),
+        warn: (...args) => _logs.push("[warn] " + args.map(String).join(" ")),
+      };
+      const console = _console;
+      try {
+        ${code}
+        parent.postMessage({ success: true, logs: _logs }, "*");
+      } catch(e) {
+        parent.postMessage({ success: false, logs: _logs, error: e.message }, "*");
+      }
+    `;
+
+    const handler = (event) => {
+      if (event.source !== iframe.contentWindow) return;
+      window.removeEventListener("message", handler);
+      document.body.removeChild(iframe);
+      const { success, logs, error } = event.data;
+      resolve({
+        success,
+        output: logs.join("\n") || "No output",
+        error: error || null,
+      });
     };
 
-    try {
-      iframe.contentWindow.eval(code);
-      resolve({ success: true, output: logs.join("\n") || "No output" });
-    } catch (err) {
-      resolve({ success: false, output: logs.join("\n"), error: err.message });
-    } finally {
-      document.body.removeChild(iframe);
-    }
+    window.addEventListener("message", handler);
+    iframe.srcdoc = `<script>${wrappedCode}<\/script>`;
   });
 }
